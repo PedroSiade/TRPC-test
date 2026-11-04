@@ -1,4 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/
 
 # dependencies
 /node_modules
@@ -16,26 +16,55 @@
 # next.js
 /.next/
 /out/
+.turbo
 
 # production
 /build
 
 # misc
 .DS_Store
-*.pem
+Thumbs.db
+*.swp
+*.swo
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# environment & secrets (never commit real values)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+!.env.example
 
-# vercel
+# keys & credential files
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+credentials.json
+secrets.json
+**/secrets/
+
+# hosting / deploy tokens
 .vercel
+.netlify
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Windows alternate data streams (e.g. Mark-of-the-Web)
+*:Zone.Identifier
+**/*:Zone.Identifier
+
+# local editor / tooling (optional machine-specific)
+.idea/
+*.iml
