@@ -2,23 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { IconButton, iconButtonClasses } from "@/components/ui/icon-button";
-import { Spinner } from "@/components/ui/spinner";
+import { iconButtonClasses } from "@/components/ui/icon-button";
+import { TaskDeleteActions } from "../../components/task-delete-actions";
 import { taskRoutes } from "../../constants/routes";
-import { useTaskMutations } from "../../hooks/use-task-mutations";
 import type { Task } from "../../types/task";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil } from "lucide-react";
 
 type TaskItemProps = {
   task: Task;
 };
 
 export function TaskItem({ task }: TaskItemProps) {
-  const { deleteTask, deletingId } = useTaskMutations();
   const [isConfirming, setIsConfirming] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const isDeleting = deletingId === task.id;
+  const showRowActions = !isDeleting && !isConfirming;
 
   return (
     <li
@@ -39,33 +37,7 @@ export function TaskItem({ task }: TaskItemProps) {
       </Link>
 
       <div className="flex shrink-0 items-center gap-1">
-        {isDeleting ? (
-          <span className="flex items-center gap-2 text-[13px] text-muted">
-            <Spinner /> Deleting…
-          </span>
-        ) : isConfirming ? (
-          <>
-            <span className="mr-1 text-[13px] font-medium text-ink">Delete?</span>
-            <button
-              type="button"
-              onClick={() => setIsConfirming(false)}
-              className="h-9 cursor-pointer px-3 text-[13px] text-muted hover:text-ink"
-            >
-              Cancel
-            </button>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => {
-                setIsConfirming(false);
-                deleteTask(task);
-              }}
-              autoFocus
-            >
-              Confirm
-            </Button>
-          </>
-        ) : (
+        {showRowActions ? (
           <>
             <Link
               href={taskRoutes.view(task.id)}
@@ -83,15 +55,13 @@ export function TaskItem({ task }: TaskItemProps) {
             >
               <Pencil size={18} strokeWidth={1.75} />
             </Link>
-            <IconButton
-              label="Delete"
-              tone="danger"
-              onClick={() => setIsConfirming(true)}
-            >
-              <Trash2 size={18} strokeWidth={1.75} />
-            </IconButton>
           </>
-        )}
+        ) : null}
+        <TaskDeleteActions
+          task={task}
+          onConfirmingChange={setIsConfirming}
+          onDeletingChange={setIsDeleting}
+        />
       </div>
     </li>
   );

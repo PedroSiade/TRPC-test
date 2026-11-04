@@ -17,12 +17,14 @@ type Toast = {
   id: number;
   kind: ToastKind;
   title: string;
-  description: string;
+  description?: string;
 };
 
+type ToastShow = (title: string, description?: string) => void;
+
 type ToastApi = {
-  success: (title: string, description: string) => void;
-  error: (title: string, description: string) => void;
+  success: ToastShow;
+  error: ToastShow;
 };
 
 const TOAST_DURATION_MS = 4500;
@@ -38,7 +40,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const push = useCallback(
-    (kind: ToastKind, title: string, description: string) => {
+    (kind: ToastKind, title: string, description?: string) => {
       const id = ++nextId.current;
       setToasts((current) => [...current, { id, kind, title, description }]);
       setTimeout(() => dismiss(id), TOAST_DURATION_MS);
@@ -59,7 +61,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <div
         aria-live="polite"
-        className="fixed right-6 bottom-6 z-50 flex w-[380px] max-w-[calc(100vw-48px)] flex-col gap-2.5"
+        className="fixed right-6 top-6 z-50 flex w-[380px] max-w-[calc(100vw-48px)] flex-col gap-2.5"
       >
         {toasts.map((toast) => {
           const isSuccess = toast.kind === "success";
@@ -85,9 +87,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-ink">{toast.title}</p>
-                <p className="mt-0.5 text-[13px] leading-snug break-words text-muted">
-                  {toast.description}
-                </p>
+                {toast.description ? (
+                  <p className="mt-0.5 text-[13px] leading-snug break-words text-muted">
+                    {toast.description}
+                  </p>
+                ) : null}
               </div>
               <button
                 type="button"

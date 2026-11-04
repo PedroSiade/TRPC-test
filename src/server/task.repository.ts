@@ -1,6 +1,7 @@
 import "server-only";
 
 import { NotFoundError } from "@/lib/errors";
+import { seedSampleTasks } from "@/features/tasks/task.seed";
 import type {
   CreateTaskInput,
   ListTasksInput,
@@ -11,25 +12,10 @@ import type {
 
 const TASK_NOT_FOUND = "Task not found.";
 
-const SAMPLE_TASK_COUNT = 30;
-
 const globalForTasks = globalThis as typeof globalThis & {
   __taskStore?: Task[];
   __taskStoreSeeded?: boolean;
 };
-
-function seedSampleTasks(store: Task[]) {
-  const baseTime = Date.now();
-  for (let index = 0; index < SAMPLE_TASK_COUNT; index += 1) {
-    const n = index + 1;
-    store.push({
-      id: crypto.randomUUID(),
-      title: `Sample task ${n}`,
-      description: n % 3 === 0 ? `Description for sample task ${n}.` : undefined,
-      createdAt: new Date(baseTime - index * 60_000),
-    });
-  }
-}
 
 function getStore(): Task[] {
   if (!globalForTasks.__taskStore) {

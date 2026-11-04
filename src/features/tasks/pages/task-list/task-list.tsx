@@ -5,6 +5,12 @@ import Link from "next/link";
 import { Button, buttonClasses } from "@/components/ui/button";
 import { ErrorBanner } from "@/components/ui/error-banner";
 import { Spinner } from "@/components/ui/spinner";
+import {
+  listEmptyBodyClass,
+  listFooterClass,
+  listScrollClass,
+  listShellClass,
+} from "../../constants/style";
 import { taskRoutes } from "../../constants/routes";
 import { useTaskList } from "../../hooks/use-task-list";
 import { TaskItem } from "./task-item";
@@ -81,24 +87,24 @@ export function TaskList() {
 
   if (tasks.length === 0) {
     return (
-      <div className="rounded-md border border-dashed border-line-strong bg-white px-6 py-14 text-center">
-        <p className="text-[17px] font-semibold text-primary">No tasks yet</p>
-        <p className="mt-2 mb-5 text-sm text-muted">
-          Create your first task to get started.
-        </p>
-        <Link href={taskRoutes.new()} className={buttonClasses("outline")}>
-          Create task
-        </Link>
+      <div className={listShellClass}>
+        <div className={listEmptyBodyClass}>
+          <p className="text-[17px] font-semibold text-primary">No tasks yet</p>
+          <p className="mt-2 mb-5 text-sm text-muted">
+            Create your first task to get started.
+          </p>
+          <Link href={taskRoutes.new()} className={buttonClasses("outline")}>
+            Create task
+          </Link>
+        </div>
+        <div className={listFooterClass}>0 of 0</div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-md border border-line bg-white">
-      <div
-        ref={scrollRef}
-        className="max-h-[min(560px,calc(100vh-280px))] overflow-y-auto overscroll-contain [scrollbar-color:#c9d1de_transparent] [scrollbar-width:thin]"
-      >
+    <div className={listShellClass}>
+      <div ref={scrollRef} className={listScrollClass}>
         <ul>
           {tasks.map((task) => (
             <TaskItem key={task.id} task={task} />
@@ -124,7 +130,7 @@ export function TaskList() {
           </div>
         ) : null}
       </div>
-      <div className="border-t border-line-soft bg-surface-alt px-6 py-2.5 font-mono text-xs text-subtle">
+      <div className={listFooterClass}>
         {tasks.length} of {total}
       </div>
     </div>

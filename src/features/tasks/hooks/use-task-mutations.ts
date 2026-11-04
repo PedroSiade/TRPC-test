@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  useMutation,
-  useQueryClient,
-  type InfiniteData,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient, type InfiniteData } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/toast";
 import { getTrpcClientErrorMessage } from "@/lib/trpc-client-error";
 import { useTRPC } from "@/trpc/client";
@@ -25,9 +21,9 @@ export function useTaskMutations() {
 
   const create = useMutation(
     trpc.tasks.create.mutationOptions({
-      onSuccess: (task) => {
+      onSuccess: () => {
         invalidateList();
-        toast.success("Task created", `"${task.title}" was saved successfully.`);
+        toast.success("Task created successfully");
       },
       onError: (err) => {
         toast.error("Could not create task", getTrpcClientErrorMessage(err));
@@ -42,7 +38,7 @@ export function useTaskMutations() {
         void queryClient.invalidateQueries(
           trpc.tasks.findById.queryFilter({ id: task.id }),
         );
-        toast.success("Task updated", `"${task.title}" was saved successfully.`);
+        toast.success("Task updated successfully");
       },
       onError: (err) => {
         toast.error("Could not update task", getTrpcClientErrorMessage(err));
@@ -81,7 +77,7 @@ export function useTaskMutations() {
       { id: task.id },
       {
         onSuccess: () => {
-          toast.success("Task deleted", `"${task.title}" was removed.`);
+          toast.success("Task deleted successfully");
           callbacks?.onSuccess?.();
         },
       },
