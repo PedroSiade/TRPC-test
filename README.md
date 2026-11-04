@@ -4,13 +4,6 @@
 
 - **Node.js:** **20+** (LTS recommended).
 
-Check the installed versions:
-
-```bash
-node -v
-npm -v
-```
-
 ## Installation
 
 From the project root:
